@@ -28,4 +28,4 @@ out
 javafx-sdk-linux
 
 # unignore .jar in javafx
-!javafx-sdk
+!javafx-sdk/**
