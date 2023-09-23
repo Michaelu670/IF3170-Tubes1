@@ -15,11 +15,17 @@ public abstract class Bot {
             };
 
             Future<int[]> f = service.submit(searchAlgorithmThread);
-
-            return f.get(TIMELIMIT_MILLISECONDS, TimeUnit.MILLISECONDS);
+            try {
+                return f.get(TIMELIMIT_MILLISECONDS, TimeUnit.MILLISECONDS);
+            }
+            catch (final InterruptedException | TimeoutException | ExecutionException e) {
+                f.cancel(true);
+                return greedyMove();
+            }
         }
-        catch (final InterruptedException | TimeoutException | ExecutionException e) {
-            return greedyMove();
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new Error();
         }
     }
 
@@ -37,5 +43,5 @@ public abstract class Bot {
      * main searching algorithm
      * @return int[2] - next move
      */
-    protected abstract int[] search();
+    protected abstract int[] search() throws Exception;
 }
