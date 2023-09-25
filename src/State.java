@@ -46,7 +46,20 @@ public class State {
      */
     public State move(int x, int y) {
         State res = new State(values, turnsLeft-1, !playerXTurn);
-        res.putMarker(x, y, playerXTurn ? "X" : "O");
+        String marker = playerXTurn ? "X" : "O";
+        res.putMarker(x, y, marker);
+        if (x > 0) {
+            res.putMarker(x-1, y, marker);
+        }
+        if (y > 0) {
+            res.putMarker(x, y-1, marker);
+        }
+        if (x < BOARD_SIZE - 1) {
+            res.putMarker(x+1, y, marker);
+        }
+        if (y < BOARD_SIZE - 1) {
+            res.putMarker(x, y+1, marker);
+        }
         return res;
     }
 
@@ -57,11 +70,20 @@ public class State {
      * @param marker "O" or "X"
      * @throws IllegalArgumentException when out of bound or marker invalid
      */
-    public void putMarker(int x, int y, String marker) {
+    public void putMarker(int x, int y, String marker) throws IllegalArgumentException {
         if (!marker.equals("O") && !marker.equals("X")) throw new IllegalArgumentException();
         if (x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE) throw new IllegalArgumentException();
 
         values[x][y] = marker;
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        State clone = (State) super.clone();
+        clone.values = values;
+        clone.turnsLeft = turnsLeft;
+        clone.playerXTurn = playerXTurn;
+
+        return clone;
+    }
 }
