@@ -77,7 +77,7 @@ public class OutputFrameController {
         this.isBotFirst = isBotFirst;
 
         // Start bot
-        this.bot = new RandomBot();
+        this.bot = new LocalSearchBot();
         this.playerXTurn = !isBotFirst;
         if (this.isBotFirst) {
             this.moveBot();
@@ -358,6 +358,7 @@ public class OutputFrameController {
                 isBotFirst ? 2 * roundsLeft : 2 * roundsLeft - 1,
                 playerXTurn
         ).getState());
+
         int i = botMove[0];
         int j = botMove[1];
 

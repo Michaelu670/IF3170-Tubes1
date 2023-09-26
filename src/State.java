@@ -22,6 +22,7 @@ public class State {
     public String[][] getValues() {return this.values;}
     public int getTurnsLeft() {return this.turnsLeft;}
     public boolean getPlayerXTurn() {return this.playerXTurn;}
+    public String getValue(int x, int y) {return this.values[x][y];}
     public void setValues(String[][] values) {
         this.values = new String[BOARD_SIZE][BOARD_SIZE];
         // this.values = values.clone();
@@ -40,7 +41,7 @@ public class State {
         if (turnsLeft > 0) throw new NoSuchMethodError();
         int xCount = (int) Arrays.stream(values).flatMap(Arrays::stream).filter((x) -> x.equals("X")).count();
         int oCount = (int) Arrays.stream(values).flatMap(Arrays::stream).filter((x) -> x.equals("O")).count();
-        return xCount - oCount;
+        return oCount - xCount;
     }
 
     /**
@@ -52,6 +53,25 @@ public class State {
         int xCount = (int) Arrays.stream(values).flatMap(Arrays::stream).filter((x) -> x.equals("X")).count();
         int oCount = (int) Arrays.stream(values).flatMap(Arrays::stream).filter((x) -> x.equals("O")).count();
         return oCount - xCount;
+    }
+
+    public void moveThis(int x, int y) {
+        turnsLeft -= 1;
+        playerXTurn = !playerXTurn;
+        String marker = playerXTurn ? "X" : "O";
+        putMarker(x, y, marker);
+        if (x > 0 && !values[x-1][y].isEmpty()) {
+            putMarker(x-1, y, marker);
+        }
+        if (y > 0 && !values[x][y-1].isEmpty()) {
+            putMarker(x, y-1, marker);
+        }
+        if (x < BOARD_SIZE - 1 && !values[x+1][y].isEmpty()) {
+            putMarker(x+1, y, marker);
+        }
+        if (y < BOARD_SIZE - 1 && !values[x][y+1].isEmpty()) {
+            putMarker(x, y+1, marker);
+        }
     }
 
     /**

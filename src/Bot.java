@@ -13,12 +13,17 @@ public abstract class Bot {
                     return search();
                 }
             };
-
+            long startTime = System.nanoTime();
             Future<int[]> f = service.submit(searchAlgorithmThread);
             try {
-                return f.get(TIMELIMIT_MILLISECONDS, TimeUnit.MILLISECONDS);
+                int[] ret = f.get(TIMELIMIT_MILLISECONDS, TimeUnit.MILLISECONDS);
+                long endTime = System.nanoTime();
+                long totalTime = endTime - startTime;
+                System.out.println("Move success in " + totalTime/1000000 + " ms");
+                return ret;
             }
             catch (final InterruptedException | TimeoutException | ExecutionException e) {
+                e.printStackTrace();
                 f.cancel(true);
                 return greedyMove();
             }
@@ -36,6 +41,7 @@ public abstract class Bot {
      */
     protected int[] greedyMove() {
         // TODO: better random move
+        System.out.println("This is fallback plan :(");
         return new int[]{(int) (Math.random()*8), (int) (Math.random()*8)};
     }
 
