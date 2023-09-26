@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Stack;
 
 /**
  * Chromosome used in GeneticAlgorithmBot
@@ -66,6 +67,14 @@ public class Chromosome {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Stack<Integer> getGeneStack() {
+        Stack<Integer> res = new Stack<>();
+        for (int i = genome.size() - 1; i >= 0; i--) {
+            res.push(genome.get(i));
+        }
+        return res;
     }
 
 
