@@ -33,8 +33,8 @@ public class GeneticAlgorithmBot extends Bot {
 //            System.out.println(genePool.get(0).objectiveFunction());
         }
 
-        System.out.println(Arrays.deepToString(genePool.get(0).toState().getValues()));
-        System.out.println(genePool.get(0).objectiveFunction());
+//        System.out.println(Arrays.deepToString(genePool.get(0).toState().getValues()));
+//        System.out.println(genePool.get(0).objectiveFunction());
         int boardPos = genePool.get(0).getGenome().get(0);
 
         return new int[]{boardPos / State.BOARD_SIZE, boardPos % State.BOARD_SIZE};
