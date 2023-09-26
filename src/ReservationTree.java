@@ -15,7 +15,7 @@ public class ReservationTree {
         this.childs = new HashMap<>();
         this.isTerminal = false;
         this.isMaxLevel = isMaxLevel;
-        this.value = isMaxLevel ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
+        this.value = isMaxLevel ? -1000000000 : 1000000000;
     }
 
     public double getValue() {

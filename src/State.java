@@ -26,7 +26,7 @@ public class State {
         if (turnsLeft > 0) throw new NoSuchMethodError();
         int xCount = (int) Arrays.stream(values).flatMap(Arrays::stream).filter((x) -> x.equals("X")).count();
         int oCount = (int) Arrays.stream(values).flatMap(Arrays::stream).filter((x) -> x.equals("O")).count();
-        return xCount - oCount;
+        return oCount - xCount;
     }
 
     /**
@@ -38,6 +38,25 @@ public class State {
         return 0.0;
     }
 
+    public void moveThis(int x, int y) {
+        turnsLeft -= 1;
+        playerXTurn = !playerXTurn;
+        String marker = playerXTurn ? "X" : "O";
+        putMarker(x, y, marker);
+        if (x > 0 && !values[x-1][y].isEmpty()) {
+            putMarker(x-1, y, marker);
+        }
+        if (y > 0 && !values[x][y-1].isEmpty()) {
+            putMarker(x, y-1, marker);
+        }
+        if (x < BOARD_SIZE - 1 && !values[x+1][y].isEmpty()) {
+            putMarker(x+1, y, marker);
+        }
+        if (y < BOARD_SIZE - 1 && !values[x][y+1].isEmpty()) {
+            putMarker(x, y+1, marker);
+        }
+    }
+
     /**
      *
      * @param x row, 0-indexing
@@ -45,7 +64,7 @@ public class State {
      * @return new State
      */
     public State move(int x, int y) {
-        State res = new State(values, turnsLeft-1, !playerXTurn);
+        State res = new State(valuesCopy(), turnsLeft-1, !playerXTurn);
         String marker = playerXTurn ? "X" : "O";
         res.putMarker(x, y, marker);
         if (x > 0) {
@@ -77,13 +96,29 @@ public class State {
         values[x][y] = marker;
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        State clone = (State) super.clone();
-        clone.values = values;
-        clone.turnsLeft = turnsLeft;
-        clone.playerXTurn = playerXTurn;
+    public String getValue(int x, int y) {
+        return values[x][y];
+    }
 
-        return clone;
+    public String[][] getValues() {
+        return values;
+    }
+
+    public int getTurnsLeft() {
+        return turnsLeft;
+    }
+
+    public String[][] valuesCopy() {
+        String[][] copy = new String[values.length][values.length];
+        for (int i = 0; i < values.length; i++) {
+            for (int j = 0; j < values.length; j++) {
+                copy[i][j] = values[i][j];
+            }
+        }
+        return copy;
+    }
+    @Override
+    protected State clone() throws CloneNotSupportedException {
+        return new State(valuesCopy(), turnsLeft, playerXTurn);
     }
 }

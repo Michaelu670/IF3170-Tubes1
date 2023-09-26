@@ -77,7 +77,7 @@ public class OutputFrameController {
         this.isBotFirst = isBotFirst;
 
         // Start bot
-        this.bot = new RandomBot();
+        this.bot = new GeneticAlgorithmBot();
         this.playerXTurn = !isBotFirst;
         if (this.isBotFirst) {
             this.moveBot();
@@ -353,7 +353,12 @@ public class OutputFrameController {
     }
 
     private void moveBot() {
-        int[] botMove = this.bot.move(new StateAdapter(buttons, roundsLeft, playerXTurn).getState());
+        int[] botMove = this.bot.move(new StateAdapter(
+                buttons,
+                isBotFirst ? 2 * roundsLeft : 2 * roundsLeft - 1,
+                playerXTurn
+        ).getState());
+
         int i = botMove[0];
         int j = botMove[1];
 
