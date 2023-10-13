@@ -17,6 +17,26 @@ public class State {
         setTurnsLeft(turnsLeft);
         setPlayerXTurn(playerXTurn);
     }
+    
+    public static State initialState(int turnsLeft, boolean playerXTurn) {
+        String[][] board = new String[State.BOARD_SIZE][State.BOARD_SIZE];
+        for (int i = 0; i < State.BOARD_SIZE ; i++) {
+            for (int j = 0; j < State.BOARD_SIZE ; j++) {
+                board[i][j] = " ";
+            }
+        }
+        board[State.BOARD_SIZE - 2][0] = "X";
+        board[State.BOARD_SIZE - 1][0] = "X";
+        board[State.BOARD_SIZE - 2][1] = "X";
+        board[State.BOARD_SIZE - 1][1] = "X";
+        board[0][State.BOARD_SIZE - 2] = "O";
+        board[0][State.BOARD_SIZE - 1] = "O";
+        board[1][State.BOARD_SIZE - 2] = "O";
+        board[1][State.BOARD_SIZE - 1] = "O";
+
+        State state = new State(board, turnsLeft, playerXTurn);
+        return state;
+    }
 
     /* getter and setter */
     public String[][] getValues() {return this.values;}
@@ -126,5 +146,31 @@ public class State {
 
 
         return clone;
+    }
+
+    public void printState() {
+        for (int i = 0; i < State.BOARD_SIZE ; i++) {
+            for (int j = 0; j < State.BOARD_SIZE ; j++) {
+                System.out.print(values[i][j].equals("X") ? "X" :
+                                values[i][j].equals("O") ? "O" :
+                                "-");
+                System.out.print(" ");
+            }
+            System.out.println();
+        }
+    }
+
+    public int[] getScore() {
+        int[] scores = new int[2];
+        for (int i = 0; i < State.BOARD_SIZE ; i++) {
+            for (int j = 0; j < State.BOARD_SIZE ; j++) {
+                if(values[i][j].equals("X")) {
+                    scores[0]++;
+                } else if(values[i][j].equals("O")) {
+                    scores[1]++;
+                }
+            }
+        }
+        return scores;
     }
 }

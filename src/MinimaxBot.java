@@ -4,7 +4,7 @@ public class MinimaxBot extends Bot{
     private double beta;
 
     private double maximize(State state) {
-        if(state.getTurnsLeft() == 0) {
+        if(state.getTurnsLeft() <= 0) {
             return state.objectiveFunction();
         }
         double maxValue = -MAX_OBJ_VAL;
@@ -33,7 +33,7 @@ public class MinimaxBot extends Bot{
     }
     
     private double minimize(State state) {
-        if(state.getTurnsLeft() == 0) {
+        if(state.getTurnsLeft() <= 0) {
             return state.objectiveFunction();
         }
         double minValue = MAX_OBJ_VAL;
