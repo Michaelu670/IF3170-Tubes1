@@ -3,6 +3,7 @@ import java.util.concurrent.*;
 public abstract class Bot {
     protected State state;
     private static final int TIMELIMIT_MILLISECONDS = 4000;
+    protected static final int MAX_OBJ_VAL = 100;
 
     public int[] move(State state) {
         this.state = state;
