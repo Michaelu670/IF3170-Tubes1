@@ -17,7 +17,7 @@ public class LocalSearchBot extends Bot{
                 try {
                     State nextState = this.state.move(i, j);
                     if (isX) {
-                        double heuristicValue = -nextState.objectiveFunctionHeuristic();
+                        double heuristicValue = nextState.objectiveFunctionHeuristic();
                         if(heuristicValue < minVal) {
                             nextMove[0] = i;
                             nextMove[1] = j;
