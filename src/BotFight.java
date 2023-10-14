@@ -10,6 +10,12 @@ public class BotFight {
         // choose whether bot 1 goes first or not
         boolean bot1Move = true;
 
+        // tell the bot which team are they
+        bot1.setX(bot1Move);
+        bot2.setX(!bot1Move);
+
+
+
         String bot1Name = bot1.getClass().getName();
         String bot2Name = bot2.getClass().getName();
 
@@ -49,7 +55,7 @@ public class BotFight {
         } else {
             System.out.print("Winner : ");
             boolean bot1Win = score[0] > score[1];
-            System.out.println(bot1Win ? bot1Name : bot2Name);
+            System.out.println(bot1Win == bot1Move ? bot1Name : bot2Name);
         }
         System.out.println("Score : " + score[0] + " - " + score[1]);
         state.printState();

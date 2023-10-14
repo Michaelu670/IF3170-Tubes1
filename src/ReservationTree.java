@@ -47,6 +47,9 @@ public class ReservationTree {
         if (isMaxLevel) {
             value = Math.max(value, childs.get(nxt).getValue());
         }
+        else {
+            value = Math.min(value, childs.get(nxt).getValue());
+        }
     }
 
     /**

@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 public class GeneticAlgorithmBot extends Bot {
 
     private static final double MUTATION_RATE = 0.05;
-    private static final int POOL_SIZE = 50;
-    private static final int GENERATE_COUNT = 80;
-    private static final int GENERATION_COUNT = 1000;
+    private static final int POOL_SIZE = 10000;
+    private static final int GENERATE_COUNT = 20000;
+    private static final int GENERATION_COUNT = 10;
     private static final int PARENT_JOIN_POOL_COUNT = 10;
 
     /**
@@ -16,7 +16,7 @@ public class GeneticAlgorithmBot extends Bot {
      * @return int[2] - next move
      */
     @Override
-    protected int[] search() {
+    protected int[] search() throws Exception {
         // Generate initial population
         ArrayList<Chromosome> genePool = new ArrayList<>();
         ChromosomeBuilder builder = new ChromosomeBuilder(state.getTurnsLeft(), state);
@@ -29,8 +29,12 @@ public class GeneticAlgorithmBot extends Bot {
 
         for (int i = 0; i < GENERATION_COUNT; i++) {
             genePool = createNextGeneration(genePool);
-//            System.out.println(genePool.get(0).getGenome());
-//            System.out.println(genePool.get(0).objectiveFunction());
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
+            }
+            System.out.println(genePool.get(0).getGenome());
+            System.out.println(Arrays.deepToString(genePool.get(0).toState().getValues()));
+            System.out.println(genePool.get(0).objectiveFunction());
         }
 
 //        System.out.println(Arrays.deepToString(genePool.get(0).toState().getValues()));
@@ -54,7 +58,7 @@ public class GeneticAlgorithmBot extends Bot {
 
         int ctr = 0;
         for (Chromosome chromosome: genePool) {
-            fitnessValues[ctr] = reservationTree.getFitness(chromosome.getGeneStack(), chromosome.objectiveFunction());
+            fitnessValues[ctr] = reservationTree.getFitness(chromosome.getGeneStack(), chromosome.objectiveFunction()) * 100 + (int)chromosome.objectiveFunction();
             if (ctr > 0) {
                 fitnessValues[ctr] += fitnessValues[ctr-1];
             }
@@ -104,7 +108,7 @@ public class GeneticAlgorithmBot extends Bot {
      * @return top chromosomes from genePool
      */
     private ArrayList<Chromosome> topChromosomes(ArrayList<Chromosome> genePool, int limit) {
-        ArrayList<Pair<Integer, Chromosome>> pairs = new ArrayList<>();
+        ArrayList<Pair<Double, Chromosome>> pairs = new ArrayList<>();
         ReservationTree reservationTree = new ReservationTree(true);
 
         for (Chromosome chromosome: genePool) {
@@ -112,11 +116,11 @@ public class GeneticAlgorithmBot extends Bot {
         }
 
         for (Chromosome chromosome: genePool) {
-            pairs.add(new Pair<>(reservationTree.getFitness(chromosome.getGeneStack(), chromosome.objectiveFunction()), chromosome));
+            pairs.add(new Pair<>(reservationTree.getFitness(chromosome.getGeneStack(), chromosome.objectiveFunction()) * 100 + chromosome.objectiveFunction(), chromosome));
         }
 
         return pairs.stream()
-                .sorted((o1, o2) -> Integer.compare(o2.getKey(), o1.getKey()))
+                .sorted((o1, o2) -> Double.compare(o2.getKey(), o1.getKey()))
                 .limit(limit)
                 .map(Pair::getValue)
                 .collect(Collectors.toCollection(ArrayList::new));

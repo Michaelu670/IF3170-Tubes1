@@ -43,6 +43,7 @@ public class State {
     public int getTurnsLeft() {return this.turnsLeft;}
     public boolean getPlayerXTurn() {return this.playerXTurn;}
     public String getValue(int x, int y) {return this.values[x][y];}
+    public void setValue(int x, int y, String p) {this.values[x][y] = p;}
     public void setValues(String[][] values) {
         this.values = new String[BOARD_SIZE][BOARD_SIZE];
         // this.values = values.clone();
@@ -94,6 +95,7 @@ public class State {
         }
     }
 
+
     /**
      * simulate real game move on current state
      * @param x row, 0-indexing
@@ -102,7 +104,7 @@ public class State {
      * @return new State
      */
     public State move(int x, int y) throws IllegalArgumentException {
-        State res = new State(values, turnsLeft-1, !playerXTurn);
+        State res = new State(valuesCopy(), turnsLeft-1, !playerXTurn);
         String marker = playerXTurn ? "X" : "O";
         String otherMarker = playerXTurn ? "O" : "X";
         if (x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE) throw new IllegalArgumentException();
@@ -137,15 +139,22 @@ public class State {
         values[x][y] = marker;
     }
 
+    public int emptyCount() {
+        return (int) Arrays.stream(values).flatMap(Arrays::stream).filter(x->x.equals(" ")|| x.isEmpty()).count();
+    }
+
+    public String[][] valuesCopy() {
+        String[][] copy = new String[values.length][values.length];
+        for (int i = 0; i < values.length; i++) {
+            for (int j = 0; j < values.length; j++) {
+                copy[i][j] = values[i][j];
+            }
+        }
+        return copy;
+    }
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        State clone = (State) super.clone();
-        clone.setValues(values);
-        clone.setTurnsLeft(turnsLeft);
-        clone.setPlayerXTurn(playerXTurn);
-
-
-        return clone;
+        return new State(valuesCopy(), turnsLeft, playerXTurn);
     }
 
     public void printState() {
