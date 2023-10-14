@@ -70,10 +70,51 @@ public class State {
      * @return any state value
      */
     public double objectiveFunctionHeuristic() {
-        // TODO
-        int xCount = (int) Arrays.stream(values).flatMap(Arrays::stream).filter((x) -> x.equals("X")).count();
-        int oCount = (int) Arrays.stream(values).flatMap(Arrays::stream).filter((x) -> x.equals("O")).count();
-        return oCount - xCount;
+        int o_l = 0;
+        int o_u = 0;
+        int x_l = 0;
+        int x_u = 0;
+        int[] dx = {0, 0, 1, -1};
+        int[] dy = {1, -1, 0, 0};
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (values[i][j].isBlank()) {
+                    continue;
+                }
+                boolean empty = false;
+                for (int k = 0; k < 4; k++) {
+                    int nx = i + dx[k];
+                    int ny = j + dy[k];
+                    if (nx < 0 || ny < 0 || nx >= BOARD_SIZE || ny >= BOARD_SIZE) {
+                        continue;
+                    }
+                    if (values[nx][ny].isBlank()) {
+                        empty = true;
+                        break;
+                    }
+                }
+
+                if (empty) {
+                    if (values[i][j].equals("X")) {
+                        x_u++;
+                    }
+                    else {
+                        o_u++;
+                    }
+                }
+                else {
+                    if (values[i][j].equals("X")) {
+                        x_l++;
+                    }
+                    else {
+                        o_l++;
+                    }
+                }
+            }
+        }
+
+        int C = o_u > x_u ? 1 : -1;
+        return o_l - x_l + C * Math.max(Math.abs(o_u-x_u)-turnsLeft, 0);
     }
 
     public void moveThis(int x, int y) {
