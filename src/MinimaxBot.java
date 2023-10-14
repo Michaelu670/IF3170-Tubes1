@@ -1,18 +1,17 @@
 public class MinimaxBot extends Bot{
-    // for a-b pruning
-    private double alpha;
-    private double beta;
-
-    private double maximize(State state) {
+    private double maximize(State state, double beta) throws InterruptedException {
         if(state.getTurnsLeft() <= 0) {
             return state.objectiveFunction();
+        }
+        if (Thread.interrupted()) {
+            throw new InterruptedException();
         }
         double maxValue = -MAX_OBJ_VAL;
         for (int i = 0;i < State.BOARD_SIZE;i++) {
             for (int j = 0;j < State.BOARD_SIZE;j++) {
                 try {
                     State nextState = state.move(i, j);
-                    double nextValue = minimize(nextState);
+                    double nextValue = minimize(nextState, maxValue);
                     if(nextValue > beta) {
                         return nextValue;
                     }
@@ -20,28 +19,30 @@ public class MinimaxBot extends Bot{
                     if(nextValue > maxValue) {
                         maxValue = nextValue;
                     }
+                } catch (InterruptedException e) {
+                    throw e;
                 } catch (Exception e) {
                     continue;
                 }
             }
         }
 
-        if(maxValue < beta) {
-            beta = maxValue;
-        }
         return maxValue;
     }
     
-    private double minimize(State state) {
+    private double minimize(State state, double alpha) throws InterruptedException {
         if(state.getTurnsLeft() <= 0) {
             return state.objectiveFunction();
+        }
+        if (Thread.interrupted()) {
+            throw new InterruptedException();
         }
         double minValue = MAX_OBJ_VAL;
         for (int i = 0;i < State.BOARD_SIZE;i++) {
             for (int j = 0;j < State.BOARD_SIZE;j++) {
                 try {
                     State nextState = state.move(i, j);
-                    double nextValue = maximize(nextState);
+                    double nextValue = maximize(nextState, minValue);
                     if(nextValue < alpha) {
                         return nextValue;
                     }
@@ -49,22 +50,19 @@ public class MinimaxBot extends Bot{
                     if(nextValue < minValue) {
                         minValue = nextValue;
                     }
+                } catch (InterruptedException e) {
+                    throw e;
                 } catch (Exception e) {
                     continue;
                 }
             }
         }
 
-        if(minValue > alpha) {
-            alpha = minValue;
-        }
         return minValue;
     }
 
     @Override
     protected int[] search() throws Exception {
-        alpha = -MAX_OBJ_VAL;
-        beta = MAX_OBJ_VAL;
         double maxValue = -MAX_OBJ_VAL;
         int[] nextMove = new int[2];
 
@@ -72,13 +70,15 @@ public class MinimaxBot extends Bot{
             for (int j = 0;j < State.BOARD_SIZE;j++) {
                 try {
                     State nextState = this.state.move(i, j);
-                    double nextValue = maximize(nextState);
+                    double nextValue = maximize(nextState, MAX_OBJ_VAL);
                     if(maxValue < nextValue) {
                         nextMove[0] = i;
                         nextMove[1] = j;
 
                         maxValue = nextValue;
                     }
+                } catch (InterruptedException e) {
+                    throw e;
                 } catch (Exception e) {
                     continue;
                 }
