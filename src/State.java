@@ -119,8 +119,8 @@ public class State {
 
     public void moveThis(int x, int y) {
         turnsLeft -= 1;
-        playerXTurn = !playerXTurn;
         String marker = playerXTurn ? "X" : "O";
+        playerXTurn = !playerXTurn;
         putMarker(x, y, marker);
         if (x > 0 && !values[x-1][y].isEmpty()) {
             putMarker(x-1, y, marker);

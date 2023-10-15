@@ -161,6 +161,11 @@ public class Chromosome {
     }
 
     @Override
+    public String toString() {
+        return genome.toString();
+    }
+
+    @Override
     protected Chromosome clone() throws CloneNotSupportedException {
         Chromosome clone = new Chromosome(initialState, (ArrayList<Integer>) genome.clone());
         return clone;
