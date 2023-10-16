@@ -1,4 +1,6 @@
 public class MinimaxBot extends Bot{
+    protected static final double MAX_DEPTH_CONSTRAINT = 1e18;
+
     // alpha value, the lower bound of the search value
     private double lowerBound;
     // beta value, the upper bound of the search value
@@ -96,12 +98,14 @@ public class MinimaxBot extends Bot{
         int[] nextMove = new int[2];
         int emptyTiles = state.emptyCount();
         int maxDepth = 0;
-        int tempMove = 1;
-        while (state.getTurnsLeft() > maxDepth && emptyTiles > 0 && tempMove * emptyTiles < 1e4) {
+        double tempMove = 1;
+        int remainingTurns = state.getTurnsLeft();
+        while (remainingTurns > maxDepth && emptyTiles > 0 && tempMove * emptyTiles < MinimaxBot.MAX_DEPTH_CONSTRAINT) {
             tempMove *= emptyTiles;
             emptyTiles--;
             maxDepth++;
         }
+        System.out.println("Max depth = " + maxDepth + "\n");
 
         double maxValue = -MAX_OBJ_VAL;
         for (int i = 0;i < State.BOARD_SIZE;i++) {
