@@ -1,4 +1,9 @@
 public class MinimaxBot extends Bot{
+    // alpha value, the lower bound of the search value
+    private double lowerBound;
+    // beta value, the upper bound of the search value
+    private double upperBound;
+
     public MinimaxBot(String player_marker) {
        super(player_marker);
     }
