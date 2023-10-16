@@ -11,6 +11,15 @@ public class StateAdapter {
         }
         state = new State(stringVal, roundsLeft, playerXTurn);
     }
+    public StateAdapter(State state, int roundsLeft) {
+        try {
+            this.state = (State) state.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+
+        this.state.setTurnsLeft(roundsLeft);
+    }
     public State getState() {
         return state;
     }

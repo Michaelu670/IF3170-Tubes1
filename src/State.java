@@ -122,16 +122,16 @@ public class State {
         String marker = playerXTurn ? "X" : "O";
         playerXTurn = !playerXTurn;
         putMarker(x, y, marker);
-        if (x > 0 && !values[x-1][y].isEmpty()) {
+        if (x > 0 && !values[x-1][y].isBlank()) {
             putMarker(x-1, y, marker);
         }
-        if (y > 0 && !values[x][y-1].isEmpty()) {
+        if (y > 0 && !values[x][y-1].isBlank()) {
             putMarker(x, y-1, marker);
         }
-        if (x < BOARD_SIZE - 1 && !values[x+1][y].isEmpty()) {
+        if (x < BOARD_SIZE - 1 && !values[x+1][y].isBlank()) {
             putMarker(x+1, y, marker);
         }
-        if (y < BOARD_SIZE - 1 && !values[x][y+1].isEmpty()) {
+        if (y < BOARD_SIZE - 1 && !values[x][y+1].isBlank()) {
             putMarker(x, y+1, marker);
         }
     }
@@ -181,7 +181,7 @@ public class State {
     }
 
     public int emptyCount() {
-        return (int) Arrays.stream(values).flatMap(Arrays::stream).filter(x->x.equals(" ")|| x.isEmpty()).count();
+        return (int) Arrays.stream(values).flatMap(Arrays::stream).filter(String::isBlank).count();
     }
 
     public String[][] valuesCopy() {

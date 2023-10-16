@@ -5,11 +5,11 @@ import java.util.stream.Collectors;
 
 public class GeneticAlgorithmBot extends Bot {
 
-    private static final double MUTATION_RATE = 0.05;
-    private static final int POOL_SIZE = 10000;
-    private static final int GENERATE_COUNT = 20000;
-    private static final int GENERATION_COUNT = 10;
-    private static final int PARENT_JOIN_POOL_COUNT = 10;
+    private static final double MUTATION_RATE = 0.02;
+    private static final int POOL_SIZE = 200;
+    private static final int GENERATE_COUNT = 300;
+    private static final int GENERATION_COUNT = 100;
+    private static final int PARENT_JOIN_POOL_COUNT = 20;
 
     /**
      * Use genetic minimax to get next move
@@ -32,9 +32,9 @@ public class GeneticAlgorithmBot extends Bot {
             if (Thread.interrupted()) {
                 throw new InterruptedException();
             }
-            System.out.println(genePool.get(0).getGenome());
-            System.out.println(Arrays.deepToString(genePool.get(0).toState().getValues()));
-            System.out.println(genePool.get(0).objectiveFunction());
+//            System.out.println(genePool.get(0).getGenome());
+//            System.out.println(Arrays.deepToString(genePool.get(0).toState().getValues()));
+//            System.out.println(genePool.get(0).objectiveFunction());
         }
 
 //        System.out.println(Arrays.deepToString(genePool.get(0).toState().getValues()));
@@ -116,8 +116,16 @@ public class GeneticAlgorithmBot extends Bot {
         }
 
         for (Chromosome chromosome: genePool) {
-            pairs.add(new Pair<>(reservationTree.getFitness(chromosome.getGeneStack(), chromosome.objectiveFunction()) * 100 + chromosome.objectiveFunction(), chromosome));
+            pairs.add(new Pair<>(reservationTree.getFitness(chromosome.getGeneStack(), chromosome.objectiveFunction()) * 1.0, chromosome));
         }
+
+        // TODO remove after debug
+//        for (Pair<Double, Chromosome> pair: pairs) {
+//            System.out.println(pair);
+//            System.out.println(pair.getValue().objectiveFunction());
+//            pair.getValue().toState().printState();
+//        }
+//        System.out.println();
 
         return pairs.stream()
                 .sorted((o1, o2) -> Double.compare(o2.getKey(), o1.getKey()))

@@ -23,9 +23,9 @@ public class BotFight {
             throw new Error();
         }
 
-        State state = State.initialState(turns, true);
-
         turns *= 2;
+
+        State state = State.initialState(turns, true);
 
         for (int i = 0; i < turns; i++) {
             int[] nextMove;

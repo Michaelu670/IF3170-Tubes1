@@ -29,7 +29,7 @@ public class ChromosomeBuilder {
         ArrayList<Integer> empty = new ArrayList<>();
         for (int i = 0; i < State.BOARD_SIZE; i++) {
             for (int j = 0; j < State.BOARD_SIZE; j++) {
-                if (state.getValue(i, j).isEmpty()) {
+                if (state.getValue(i, j).isBlank()) {
                     empty.add(i * State.BOARD_SIZE + j);
                 }
             }
