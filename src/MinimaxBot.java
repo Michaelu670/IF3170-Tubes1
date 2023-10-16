@@ -1,15 +1,16 @@
 public class MinimaxBot extends Bot{
-    public MinimaxBot() {
-        isX = false;
+    // alpha value, the lower bound of the search value
+    private double lowerBound;
+    // beta value, the upper bound of the search value
+    private double upperBound;
+
+    public MinimaxBot(String player_marker) {
+        super(player_marker);
     }
 
-    public MinimaxBot(boolean isX) {
-        this.isX = isX;
-    }
-
-    private double maximize(State state, double beta, int depth) throws InterruptedException {
+    private double maximize(State state, int depth) throws InterruptedException {
         if(depth == 0) {
-            return state.objectiveFunctionHeuristic();
+            return state.objectiveFunctionHeuristic(this.player_marker);
         }
         if(state.getTurnsLeft() <= 0) {
             return state.objectiveFunction();
@@ -22,8 +23,11 @@ public class MinimaxBot extends Bot{
             for (int j = 0;j < State.BOARD_SIZE;j++) {
                 try {
                     State nextState = state.move(i, j);
-                    double nextValue = minimize(nextState, maxValue, depth-1);
-                    if(nextValue > beta) {
+                    double nextValue = minimize(nextState, depth-1);
+                    if(nextValue > upperBound) {
+                        // kandidat nilai pada maximize lebih besar dari upper bound parent
+                        // (pasti tidak terpilih pada minimize parent)
+                        // pencarian selanjutnya akan menghasilkan nilai lebih besar, prune
                         return nextValue;
                     }
 
@@ -38,12 +42,15 @@ public class MinimaxBot extends Bot{
             }
         }
 
+        if(maxValue < upperBound) {
+            upperBound = maxValue;
+        }
         return maxValue;
     }
     
-    private double minimize(State state, double alpha, int depth) throws InterruptedException {
+    private double minimize(State state, int depth) throws InterruptedException {
         if(depth == 0) {
-            return state.objectiveFunctionHeuristic();
+            return state.objectiveFunctionHeuristic(this.player_marker);
         }
         if(state.getTurnsLeft() <= 0) {
             return state.objectiveFunction();
@@ -56,8 +63,11 @@ public class MinimaxBot extends Bot{
             for (int j = 0;j < State.BOARD_SIZE;j++) {
                 try {
                     State nextState = state.move(i, j);
-                    double nextValue = maximize(nextState, minValue, depth-1);
-                    if(nextValue < alpha) {
+                    double nextValue = maximize(nextState, depth-1);
+                    if(nextValue < lowerBound) {
+                        // kandidat nilai pada minimize lebih kecil dari lower bound parent
+                        // (pasti tidak terpilih pada maximize parent)
+                        // pencarian selanjutnya akan menghasilkan nilai lebih kecil, prune
                         return nextValue;
                     }
 
@@ -72,13 +82,16 @@ public class MinimaxBot extends Bot{
             }
         }
 
+        if(minValue > lowerBound) {
+            lowerBound = minValue;
+        }
         return minValue;
     }
 
     @Override
     protected int[] search() throws Exception {
-        double maxValue = -MAX_OBJ_VAL;
-        double minValue = MAX_OBJ_VAL;
+        this.lowerBound = -MAX_OBJ_VAL;
+        this.upperBound = MAX_OBJ_VAL;
 
         int[] nextMove = new int[2];
         int emptyTiles = state.emptyCount();
@@ -90,29 +103,18 @@ public class MinimaxBot extends Bot{
             maxDepth++;
         }
 
+        double maxValue = -MAX_OBJ_VAL;
         for (int i = 0;i < State.BOARD_SIZE;i++) {
             for (int j = 0;j < State.BOARD_SIZE;j++) {
                 try {
                     State nextState = this.state.move(i, j);
-                    if (isX) {
-                        double nextValue = minimize(nextState, MAX_OBJ_VAL, maxDepth);
-                        if(minValue > nextValue) {
-                            nextMove[0] = i;
-                            nextMove[1] = j;
+                    double nextValue = minimize(nextState, maxDepth);
+                    if(maxValue < nextValue) {
+                        nextMove[0] = i;
+                        nextMove[1] = j;
 
-                            minValue = nextValue;
-                        }
+                        maxValue = nextValue;
                     }
-                    else {
-                        double nextValue = maximize(nextState, MAX_OBJ_VAL, maxDepth);
-                        if(maxValue < nextValue) {
-                            nextMove[0] = i;
-                            nextMove[1] = j;
-
-                            maxValue = nextValue;
-                        }
-                    }
-
                 } catch (InterruptedException e) {
                     throw e;
                 } catch (Exception e) {
@@ -121,6 +123,9 @@ public class MinimaxBot extends Bot{
             }
         }
 
+        // Reset alpha & beta value used for pruning to 0, just in case
+        this.lowerBound = -MAX_OBJ_VAL;
+        this.upperBound = MAX_OBJ_VAL;
         return nextMove;
     }
 }
