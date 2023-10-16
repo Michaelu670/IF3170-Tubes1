@@ -4,14 +4,14 @@ public abstract class Bot {
     protected State state;
     private static final int TIMELIMIT_MILLISECONDS = 4000;
     protected static final int MAX_OBJ_VAL = 100;
-    boolean isX;
+    String player_marker;
 
-    public boolean isX() {
-        return isX;
+    protected Bot(String player_marker) {
+        this.player_marker = player_marker;
     }
 
-    public void setX(boolean x) {
-        isX = x;
+    public boolean isX() {
+        return player_marker.equals(State.X_MARKER);
     }
 
     public int[] move(State state) {

@@ -7,6 +7,8 @@ import java.util.Arrays;
  * TODO: UNTESTED
  */
 public class State {
+    public static final String X_MARKER = "X";
+    public static final String O_MARKER = "O";
     private String[][] values;
     private int turnsLeft;
     private boolean playerXTurn;
@@ -69,11 +71,11 @@ public class State {
      *
      * @return any state value
      */
-    public double objectiveFunctionHeuristic() {
-        int o_l = 0;
-        int o_u = 0;
-        int x_l = 0;
-        int x_u = 0;
+    public double objectiveFunctionHeuristic(String player_marker) {
+        int opponent_l = 0;
+        int opponent_u = 0;
+        int player_l = 0;
+        int player_u = 0;
         int[] dx = {0, 0, 1, -1};
         int[] dy = {1, -1, 0, 0};
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -95,26 +97,26 @@ public class State {
                 }
 
                 if (empty) {
-                    if (values[i][j].equals("X")) {
-                        x_u++;
+                    if (values[i][j].equals(player_marker)) {
+                        player_u++;
                     }
                     else {
-                        o_u++;
+                        opponent_u++;
                     }
                 }
                 else {
-                    if (values[i][j].equals("X")) {
-                        x_l++;
+                    if (values[i][j].equals(player_marker)) {
+                        player_l++;
                     }
                     else {
-                        o_l++;
+                        opponent_l++;
                     }
                 }
             }
         }
 
-        int C = o_u > x_u ? 1 : -1;
-        return o_l - x_l + C * Math.max(Math.abs(o_u-x_u)-turnsLeft, 0);
+        int C = opponent_u > player_u ? 1 : -1;
+        return opponent_l - player_l + C * Math.max(Math.abs(opponent_u-player_u)-turnsLeft, 0);
     }
 
     public void moveThis(int x, int y) {
