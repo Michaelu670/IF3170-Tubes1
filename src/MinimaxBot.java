@@ -1,8 +1,5 @@
 public class MinimaxBot extends Bot{
-    // alpha value, the lower bound of the search value
-    private double lowerBound;
-    // beta value, the upper bound of the search value
-    private double upperBound;
+    protected static final double MAX_DEPTH_CONSTRAINT = 1e18;
 
     public MinimaxBot(String player_marker) {
        super(player_marker);
@@ -10,7 +7,7 @@ public class MinimaxBot extends Bot{
 
     private double maximize(State state, double beta, int depth) throws InterruptedException {
         if(depth == 0) {
-            return state.objectiveFunctionHeuristic(player_marker);
+            return state.objectiveFunctionHeuristic(this.player_marker);
         }
         if(state.getTurnsLeft() <= 0) {
             return state.objectiveFunction();
@@ -44,7 +41,7 @@ public class MinimaxBot extends Bot{
     
     private double minimize(State state, double alpha, int depth) throws InterruptedException {
         if(depth == 0) {
-            return state.objectiveFunctionHeuristic(player_marker);
+            return state.objectiveFunctionHeuristic(this.player_marker);
         }
         if(state.getTurnsLeft() <= 0) {
             return state.objectiveFunction();
@@ -83,8 +80,9 @@ public class MinimaxBot extends Bot{
         int[] nextMove = new int[2];
         int emptyTiles = state.emptyCount();
         int maxDepth = 0;
-        int tempMove = 1;
-        while (state.getTurnsLeft() > maxDepth && emptyTiles > 0 && tempMove * emptyTiles < 1e4) {
+        double tempMove = 1;
+        int remainingTurns = state.getTurnsLeft();
+        while (remainingTurns > maxDepth && emptyTiles > 0 && tempMove * emptyTiles < MinimaxBot.MAX_DEPTH_CONSTRAINT) {
             tempMove *= emptyTiles;
             emptyTiles--;
             maxDepth++;
