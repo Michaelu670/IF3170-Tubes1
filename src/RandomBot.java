@@ -1,4 +1,9 @@
 public class RandomBot extends Bot {
+    protected RandomBot() {
+        // any marker will do.
+        super(State.X_MARKER);
+    }
+
     @Override
     protected int[] search() throws Exception {
         for (int i = 0; i < 10; i++) {

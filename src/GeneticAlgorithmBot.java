@@ -11,6 +11,10 @@ public class GeneticAlgorithmBot extends Bot {
     private static final int GENERATION_COUNT = 150;
     private static final int PARENT_JOIN_POOL_COUNT = 20;
 
+    public GeneticAlgorithmBot(String player_marker) {
+        super(player_marker);
+    }
+
     /**
      * Use genetic minimax to get next move
      * @return int[2] - next move

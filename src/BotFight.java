@@ -4,17 +4,11 @@ public class BotFight {
         boolean showMoves = true;
 
         // bot 1 : X, bot 2 : O
-        Bot bot1 = new MinimaxBot();
-        Bot bot2 = new LocalSearchBot();
+        Bot bot1 = new MinimaxBot(State.X_MARKER);
+        Bot bot2 = new LocalSearchBot(State.O_MARKER);
 
         // choose whether bot 1 goes first or not
         boolean bot1Move = true;
-
-        // tell the bot which team are they
-        bot1.setX(bot1Move);
-        bot2.setX(!bot1Move);
-
-
 
         String bot1Name = bot1.getClass().getName();
         String bot2Name = bot2.getClass().getName();

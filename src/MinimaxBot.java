@@ -1,15 +1,13 @@
 public class MinimaxBot extends Bot{
-    public MinimaxBot() {
-        isX = false;
-    }
+    protected static final double MAX_DEPTH_CONSTRAINT = 1e18;
 
-    public MinimaxBot(boolean isX) {
-        this.isX = isX;
+    public MinimaxBot(String player_marker) {
+       super(player_marker);
     }
 
     private double maximize(State state, double beta, int depth) throws InterruptedException {
         if(depth == 0) {
-            return state.objectiveFunctionHeuristic();
+            return state.objectiveFunctionHeuristic(this.player_marker);
         }
         if(state.getTurnsLeft() <= 0) {
             return state.objectiveFunction();
@@ -43,7 +41,7 @@ public class MinimaxBot extends Bot{
     
     private double minimize(State state, double alpha, int depth) throws InterruptedException {
         if(depth == 0) {
-            return state.objectiveFunctionHeuristic();
+            return state.objectiveFunctionHeuristic(this.player_marker);
         }
         if(state.getTurnsLeft() <= 0) {
             return state.objectiveFunction();
@@ -78,13 +76,13 @@ public class MinimaxBot extends Bot{
     @Override
     protected int[] search() throws Exception {
         double maxValue = -MAX_OBJ_VAL;
-        double minValue = MAX_OBJ_VAL;
 
         int[] nextMove = new int[2];
         int emptyTiles = state.emptyCount();
         int maxDepth = 0;
-        int tempMove = 1;
-        while (state.getTurnsLeft() > maxDepth && emptyTiles > 0 && tempMove * emptyTiles < 1e4) {
+        double tempMove = 1;
+        int remainingTurns = state.getTurnsLeft();
+        while (remainingTurns > maxDepth && emptyTiles > 0 && tempMove * emptyTiles < MinimaxBot.MAX_DEPTH_CONSTRAINT) {
             tempMove *= emptyTiles;
             emptyTiles--;
             maxDepth++;
@@ -94,25 +92,13 @@ public class MinimaxBot extends Bot{
             for (int j = 0;j < State.BOARD_SIZE;j++) {
                 try {
                     State nextState = this.state.move(i, j);
-                    if (isX) {
-                        double nextValue = maximize(nextState, MAX_OBJ_VAL, maxDepth);
-                        if(minValue > nextValue) {
-                            nextMove[0] = i;
-                            nextMove[1] = j;
+                    double nextValue = minimize(nextState, -MAX_OBJ_VAL, maxDepth);
+                    if(maxValue < nextValue) {
+                        nextMove[0] = i;
+                        nextMove[1] = j;
 
-                            minValue = nextValue;
-                        }
+                        maxValue = nextValue;
                     }
-                    else {
-                        double nextValue = minimize(nextState, -MAX_OBJ_VAL, maxDepth);
-                        if(maxValue < nextValue) {
-                            nextMove[0] = i;
-                            nextMove[1] = j;
-
-                            maxValue = nextValue;
-                        }
-                    }
-
                 } catch (InterruptedException e) {
                     throw e;
                 } catch (Exception e) {
