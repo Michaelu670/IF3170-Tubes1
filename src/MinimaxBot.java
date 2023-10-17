@@ -95,7 +95,7 @@ public class MinimaxBot extends Bot{
                 try {
                     State nextState = this.state.move(i, j);
                     if (isX) {
-                        double nextValue = minimize(nextState, MAX_OBJ_VAL, maxDepth);
+                        double nextValue = maximize(nextState, -MAX_OBJ_VAL, maxDepth);
                         if(minValue > nextValue) {
                             nextMove[0] = i;
                             nextMove[1] = j;
@@ -104,7 +104,7 @@ public class MinimaxBot extends Bot{
                         }
                     }
                     else {
-                        double nextValue = maximize(nextState, MAX_OBJ_VAL, maxDepth);
+                        double nextValue = minimize(nextState, MAX_OBJ_VAL, maxDepth);
                         if(maxValue < nextValue) {
                             nextMove[0] = i;
                             nextMove[1] = j;
