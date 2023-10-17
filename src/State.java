@@ -115,8 +115,8 @@ public class State {
             }
         }
 
-        int C = opponent_u > player_u ? 1 : -1;
-        return opponent_l - player_l + C * Math.max(Math.abs(opponent_u-player_u)-turnsLeft, 0);
+        int C = player_u > opponent_u ? 1 : -1;
+        return player_l - opponent_l + C * Math.max(Math.abs(player_u-opponent_u)-turnsLeft, 0);
     }
 
     public void moveThis(int x, int y) {
