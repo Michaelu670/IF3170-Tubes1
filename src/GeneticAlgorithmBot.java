@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 public class GeneticAlgorithmBot extends Bot {
 
     private static final double MUTATION_RATE = 0.02;
-    private static final int POOL_SIZE = 200;
-    private static final int GENERATE_COUNT = 300;
-    private static final int GENERATION_COUNT = 100;
+    private static final int POOL_SIZE = 300;
+    private static final int GENERATE_COUNT = 400;
+    private static final int GENERATION_COUNT = 150;
     private static final int PARENT_JOIN_POOL_COUNT = 20;
 
     /**
@@ -19,11 +19,12 @@ public class GeneticAlgorithmBot extends Bot {
     protected int[] search() throws Exception {
         // Generate initial population
         ArrayList<Chromosome> genePool = new ArrayList<>();
-        ChromosomeBuilder builder = new ChromosomeBuilder(state.getTurnsLeft(), state);
+        // Build chromosome with length at most 4
+        ChromosomeBuilder builder = new ChromosomeBuilder(Math.min(state.getTurnsLeft(), 4), state);
 
         // add sorted gene
         for (int i = 0; i < POOL_SIZE; i++) {
-            genePool.add(builder.build());
+            genePool.add(builder.buildGood());
         }
         genePool = topChromosomes(genePool, POOL_SIZE);
 

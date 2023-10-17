@@ -50,7 +50,7 @@ public class Chromosome {
      * @return double - objective value
      */
     public double objectiveFunction() {
-        return toState().objectiveFunction();
+        return toState().objectiveFunctionHeuristic();
     }
 
     public State toState() {
