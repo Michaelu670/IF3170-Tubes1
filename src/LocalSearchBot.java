@@ -1,5 +1,5 @@
 public class LocalSearchBot extends Bot{
-    public LocalSearchBot(String player_marker) {
+    public LocalSearchBot(char player_marker) {
         super(player_marker);
     }
 

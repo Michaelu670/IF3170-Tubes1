@@ -10,9 +10,9 @@ import java.util.*;
 public class Chromosome {
     private State initialState;
     private ArrayList<Integer> genome;
-    String player_marker;
+    char player_marker;
 
-    public Chromosome(State initialState, ArrayList<Integer> genome, String player_marker) {
+    public Chromosome(State initialState, ArrayList<Integer> genome, char player_marker) {
         this.initialState = initialState;
         this.genome = genome;
         this.player_marker = player_marker;

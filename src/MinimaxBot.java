@@ -1,7 +1,7 @@
 public class MinimaxBot extends Bot{
-    protected static final double MAX_DEPTH_CONSTRAINT = 1e4;
+    protected static final double MAX_DEPTH_CONSTRAINT = 5e4;
 
-    public MinimaxBot(String player_marker) {
+    public MinimaxBot(char player_marker) {
        super(player_marker);
     }
 
@@ -87,6 +87,8 @@ public class MinimaxBot extends Bot{
             emptyTiles--;
             maxDepth++;
         }
+
+        System.out.println("Max depth : " + maxDepth);
 
         for (int i = 0;i < State.BOARD_SIZE;i++) {
             for (int j = 0;j < State.BOARD_SIZE;j++) {

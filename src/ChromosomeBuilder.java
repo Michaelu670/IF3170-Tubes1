@@ -9,12 +9,12 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ChromosomeBuilder {
     int turnsLeft;
     State state;
-    String player_marker;
+    char player_marker;
     public ChromosomeBuilder() {
 
     }
 
-    public ChromosomeBuilder(int turnsLeft, State state, String player_marker) {
+    public ChromosomeBuilder(int turnsLeft, State state, char player_marker) {
         this.turnsLeft = turnsLeft;
         this.state = state;
         this.player_marker = player_marker;
@@ -36,7 +36,7 @@ public class ChromosomeBuilder {
         ArrayList<Integer> empty = new ArrayList<>();
         for (int i = 0; i < State.BOARD_SIZE; i++) {
             for (int j = 0; j < State.BOARD_SIZE; j++) {
-                if (state.getValue(i, j).isBlank()) {
+                if (state.getValue(i, j) == State.BLANK_MARKER) {
                     empty.add(i * State.BOARD_SIZE + j);
                 }
             }
@@ -58,7 +58,7 @@ public class ChromosomeBuilder {
         // get all empty positions
         for (int i = 0; i < State.BOARD_SIZE; i++) {
             for (int j = 0; j < State.BOARD_SIZE; j++) {
-                if (state.getValue(i, j).isBlank()) {
+                if (state.getValue(i, j) == State.BLANK_MARKER) {
                     double nxtValue = state.move(i, j).objectiveFunctionHeuristic(player_marker);
                     emptyAndVal.add(new Pair<>(nxtValue-curValue,i * State.BOARD_SIZE + j));
                     empty.add(i * State.BOARD_SIZE + j);

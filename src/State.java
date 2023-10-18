@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /**
@@ -7,47 +8,48 @@ import java.util.Arrays;
  * TODO: UNTESTED
  */
 public class State {
-    public static final String X_MARKER = "X";
-    public static final String O_MARKER = "O";
-    private String[][] values;
+    public static final char X_MARKER = 'X';
+    public static final char O_MARKER = 'O';
+    public static final char BLANK_MARKER = ' ';
+    private char[][] values;
     private int turnsLeft;
     private boolean playerXTurn;
     public static final int BOARD_SIZE = 8;
 
-    public State(String[][] values, int turnsLeft, boolean playerXTurn) {
+    public State(char[][] values, int turnsLeft, boolean playerXTurn) {
         setValues(values);
         setTurnsLeft(turnsLeft);
         setPlayerXTurn(playerXTurn);
     }
     
     public static State initialState(int turnsLeft, boolean playerXTurn) {
-        String[][] board = new String[State.BOARD_SIZE][State.BOARD_SIZE];
+        char[][] board = new char[State.BOARD_SIZE][State.BOARD_SIZE];
         for (int i = 0; i < State.BOARD_SIZE ; i++) {
             for (int j = 0; j < State.BOARD_SIZE ; j++) {
-                board[i][j] = " ";
+                board[i][j] = BLANK_MARKER;
             }
         }
-        board[State.BOARD_SIZE - 2][0] = "X";
-        board[State.BOARD_SIZE - 1][0] = "X";
-        board[State.BOARD_SIZE - 2][1] = "X";
-        board[State.BOARD_SIZE - 1][1] = "X";
-        board[0][State.BOARD_SIZE - 2] = "O";
-        board[0][State.BOARD_SIZE - 1] = "O";
-        board[1][State.BOARD_SIZE - 2] = "O";
-        board[1][State.BOARD_SIZE - 1] = "O";
+        board[State.BOARD_SIZE - 2][0] = X_MARKER;
+        board[State.BOARD_SIZE - 1][0] = X_MARKER;
+        board[State.BOARD_SIZE - 2][1] = X_MARKER;
+        board[State.BOARD_SIZE - 1][1] = X_MARKER;
+        board[0][State.BOARD_SIZE - 2] = O_MARKER;
+        board[0][State.BOARD_SIZE - 1] = O_MARKER;
+        board[1][State.BOARD_SIZE - 2] = O_MARKER;
+        board[1][State.BOARD_SIZE - 1] = O_MARKER;
 
         State state = new State(board, turnsLeft, playerXTurn);
         return state;
     }
 
     /* getter and setter */
-    public String[][] getValues() {return this.values;}
+    public char[][] getValues() {return this.values;}
     public int getTurnsLeft() {return this.turnsLeft;}
     public boolean getPlayerXTurn() {return this.playerXTurn;}
-    public String getValue(int x, int y) {return this.values[x][y];}
-    public void setValue(int x, int y, String p) {this.values[x][y] = p;}
-    public void setValues(String[][] values) {
-        this.values = new String[BOARD_SIZE][BOARD_SIZE];
+    public char getValue(int x, int y) {return this.values[x][y];}
+    public void setValue(int x, int y, char p) {this.values[x][y] = p;}
+    public void setValues(char[][] values) {
+        this.values = new char[BOARD_SIZE][BOARD_SIZE];
         // this.values = values.clone();
         for (int i = 0; i < values.length; i++) {
             System.arraycopy(values[i], 0, this.values[i], 0, values.length);
@@ -60,11 +62,22 @@ public class State {
      * @return final state value
      * @throws NoSuchMethodError if this is not terminal state
      */
-    public double objectiveFunction(String player_marker) throws NoSuchMethodError {
+    public double objectiveFunction(char player_marker) throws NoSuchMethodError {
         if (turnsLeft > 0) throw new NoSuchMethodError();
-        int xCount = (int) Arrays.stream(values).flatMap(Arrays::stream).filter((x) -> x.equals("X")).count();
-        int oCount = (int) Arrays.stream(values).flatMap(Arrays::stream).filter((x) -> x.equals("O")).count();
-        if (player_marker.equals(X_MARKER)) {
+        int xCount = 0;
+        int oCount = 0;
+        for (int i = 0; i < values.length; i++) {
+            for (int j = 0; j < values.length; j++) {
+                if(values[i][j] == X_MARKER) {
+                    xCount++;
+                }
+                if(values[i][j] == O_MARKER) {
+                    oCount++;
+                }
+            }
+        }
+        
+        if (player_marker == X_MARKER) {
             return xCount - oCount;
         }
         else {
@@ -76,7 +89,7 @@ public class State {
      *
      * @return any state value
      */
-    public double objectiveFunctionHeuristic(String player_marker) {
+    public double objectiveFunctionHeuristic(char player_marker) {
         int opponent_l = 0;
         int opponent_u = 0;
         int player_l = 0;
@@ -85,7 +98,7 @@ public class State {
         int[] dy = {1, -1, 0, 0};
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
-                if (values[i][j].isBlank()) {
+                if (values[i][j] == BLANK_MARKER) {
                     continue;
                 }
                 boolean empty = false;
@@ -95,14 +108,14 @@ public class State {
                     if (nx < 0 || ny < 0 || nx >= BOARD_SIZE || ny >= BOARD_SIZE) {
                         continue;
                     }
-                    if (values[nx][ny].isBlank()) {
+                    if (values[nx][ny] == BLANK_MARKER) {
                         empty = true;
                         break;
                     }
                 }
 
                 if (empty) {
-                    if (values[i][j].equals(player_marker)) {
+                    if (values[i][j] == player_marker) {
                         player_u++;
                     }
                     else {
@@ -110,7 +123,7 @@ public class State {
                     }
                 }
                 else {
-                    if (values[i][j].equals(player_marker)) {
+                    if (values[i][j] == player_marker) {
                         player_l++;
                     }
                     else {
@@ -126,19 +139,19 @@ public class State {
 
     public void moveThis(int x, int y) {
         turnsLeft -= 1;
-        String marker = playerXTurn ? "X" : "O";
+        char marker = playerXTurn ? X_MARKER : O_MARKER;
         playerXTurn = !playerXTurn;
         putMarker(x, y, marker);
-        if (x > 0 && !values[x-1][y].isBlank()) {
+        if (x > 0 && !(values[x-1][y] == BLANK_MARKER)) {
             putMarker(x-1, y, marker);
         }
-        if (y > 0 && !values[x][y-1].isBlank()) {
+        if (y > 0 && !(values[x][y-1] == BLANK_MARKER)) {
             putMarker(x, y-1, marker);
         }
-        if (x < BOARD_SIZE - 1 && !values[x+1][y].isBlank()) {
+        if (x < BOARD_SIZE - 1 && !(values[x+1][y] == BLANK_MARKER)) {
             putMarker(x+1, y, marker);
         }
-        if (y < BOARD_SIZE - 1 && !values[x][y+1].isBlank()) {
+        if (y < BOARD_SIZE - 1 && !(values[x][y+1] == BLANK_MARKER)) {
             putMarker(x, y+1, marker);
         }
     }
@@ -152,22 +165,22 @@ public class State {
      * @return new State
      */
     public State move(int x, int y) throws IllegalArgumentException {
-        State res = new State(valuesCopy(), turnsLeft-1, !playerXTurn);
-        String marker = playerXTurn ? "X" : "O";
-        String otherMarker = playerXTurn ? "O" : "X";
         if (x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE) throw new IllegalArgumentException();
-        if(values[x][y].equals("X") || values[x][y].equals("O")) throw new IllegalArgumentException();
+        if(values[x][y] == X_MARKER || values[x][y] == O_MARKER) throw new IllegalArgumentException();
+        State res = new State(valuesCopy(), turnsLeft-1, !playerXTurn);
+        char marker = playerXTurn ? X_MARKER : O_MARKER;
+        char otherMarker = playerXTurn ? O_MARKER : X_MARKER;
         res.putMarker(x, y, marker);
-        if (x > 0 && values[x-1][y].equals(otherMarker)) {
+        if (x > 0 && (values[x-1][y] == otherMarker)) {
             res.putMarker(x-1, y, marker);
         }
-        if (y > 0 && values[x][y-1].equals(otherMarker)) {
+        if (y > 0 && (values[x][y-1] == otherMarker)) {
             res.putMarker(x, y-1, marker);
         }
-        if (x < BOARD_SIZE - 1 && values[x+1][y].equals(otherMarker)) {
+        if (x < BOARD_SIZE - 1 && (values[x+1][y] == otherMarker)) {
             res.putMarker(x+1, y, marker);
         }
-        if (y < BOARD_SIZE - 1 && values[x][y+1].equals(otherMarker)) {
+        if (y < BOARD_SIZE - 1 && (values[x][y+1] == otherMarker)) {
             res.putMarker(x, y+1, marker);
         }
         return res;
@@ -177,22 +190,30 @@ public class State {
      * do values[x][y] = marker
      * @param x row, 0-indexing
      * @param y col, 0-indexing
-     * @param marker "O" or "X"
+     * @param marker O_MARKER or X_MARKER
      * @throws IllegalArgumentException when out of bound or marker invalid
      */
-    public void putMarker(int x, int y, String marker) throws IllegalArgumentException {
-        if (!marker.equals("O") && !marker.equals("X")) throw new IllegalArgumentException();
+    public void putMarker(int x, int y, char marker) throws IllegalArgumentException {
+        if (!(marker == O_MARKER) && !(marker == X_MARKER)) throw new IllegalArgumentException();
         if (x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE) throw new IllegalArgumentException();
 
         values[x][y] = marker;
     }
 
     public int emptyCount() {
-        return (int) Arrays.stream(values).flatMap(Arrays::stream).filter(String::isBlank).count();
+        int empty_count = 0;
+        for (int i = 0; i < values.length; i++) {
+            for (int j = 0; j < values.length; j++) {
+                if(values[i][j] == BLANK_MARKER) {
+                    empty_count++;
+                }
+            }
+        }
+        return empty_count;
     }
 
-    public String[][] valuesCopy() {
-        String[][] copy = new String[values.length][values.length];
+    public char[][] valuesCopy() {
+        char[][] copy = new char[values.length][values.length];
         for (int i = 0; i < values.length; i++) {
             for (int j = 0; j < values.length; j++) {
                 copy[i][j] = values[i][j];
@@ -208,10 +229,10 @@ public class State {
     public void printState() {
         for (int i = 0; i < State.BOARD_SIZE ; i++) {
             for (int j = 0; j < State.BOARD_SIZE ; j++) {
-                System.out.print(values[i][j].equals("X") ? "X" :
-                                values[i][j].equals("O") ? "O" :
+                System.out.print(values[i][j] == X_MARKER ? X_MARKER :
+                                values[i][j] == O_MARKER ? O_MARKER :
                                 "-");
-                System.out.print(" ");
+                System.out.print(BLANK_MARKER);
             }
             System.out.println();
         }
@@ -221,9 +242,9 @@ public class State {
         int[] scores = new int[2];
         for (int i = 0; i < State.BOARD_SIZE ; i++) {
             for (int j = 0; j < State.BOARD_SIZE ; j++) {
-                if(values[i][j].equals("X")) {
+                if(values[i][j] == X_MARKER) {
                     scores[0]++;
-                } else if(values[i][j].equals("O")) {
+                } else if(values[i][j] == O_MARKER) {
                     scores[1]++;
                 }
             }

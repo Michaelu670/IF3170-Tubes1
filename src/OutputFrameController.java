@@ -77,7 +77,7 @@ public class OutputFrameController {
         this.isBotFirst = isBotFirst;
 
         // Start bot
-        String bot_marker;
+        char bot_marker;
         if (isBotFirst) bot_marker = State.X_MARKER;
         else bot_marker = State.O_MARKER;
         this.bot = new MinimaxBot(bot_marker);
