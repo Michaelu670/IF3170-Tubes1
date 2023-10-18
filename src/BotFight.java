@@ -3,12 +3,14 @@ public class BotFight {
         int turns = 28;
         boolean showMoves = true;
 
-        // bot 1 : X, bot 2 : O
-        Bot bot1 = new MinimaxBot(State.X_MARKER);
-        Bot bot2 = new LocalSearchBot(State.O_MARKER);
-
         // choose whether bot 1 goes first or not
         boolean bot1Move = true;
+
+        String bot1Marker = bot1Move ? State.X_MARKER : State.O_MARKER;
+        String bot2Marker = bot1Move ? State.O_MARKER : State.X_MARKER;
+
+        Bot bot1 = new LocalSearchBot(bot1Marker);
+        Bot bot2 = new MinimaxBot(bot2Marker);
 
         String bot1Name = bot1.getClass().getName();
         String bot2Name = bot2.getClass().getName();
