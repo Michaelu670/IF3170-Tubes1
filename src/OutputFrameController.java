@@ -77,10 +77,7 @@ public class OutputFrameController {
         this.isBotFirst = isBotFirst;
 
         // Start bot
-        char bot_marker;
-        if (isBotFirst) bot_marker = State.X_MARKER;
-        else bot_marker = State.O_MARKER;
-        this.bot = new MinimaxBot(bot_marker);
+        this.bot = new MinimaxBot(State.O_MARKER);
 
         this.playerXTurn = !isBotFirst;
         if (this.isBotFirst) {
@@ -198,6 +195,7 @@ public class OutputFrameController {
 
                 if (isBotFirst && this.roundsLeft == 0) {
                     this.endOfGame();
+                    return;
                 }
 
                 // Bot's turn

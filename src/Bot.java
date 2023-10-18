@@ -50,9 +50,9 @@ public abstract class Bot {
      * @return int[2] - next move
      */
     protected int[] greedyMove() {
-        // TODO: better random move
         System.out.println("This is fallback plan :(");
-        return new int[]{(int) (Math.random()*8), (int) (Math.random()*8)};
+        Bot fallbackBot = new LocalSearchBot(player_marker);
+        return fallbackBot.move(state);
     }
 
     /**
