@@ -1,5 +1,5 @@
 public class MinimaxBot extends Bot{
-    protected static final double MAX_DEPTH_CONSTRAINT = 5e4;
+    protected static final double MAX_DEPTH_CONSTRAINT = 1e5;
 
     public MinimaxBot(char player_marker) {
        super(player_marker);
@@ -21,7 +21,7 @@ public class MinimaxBot extends Bot{
                 try {
                     State nextState = state.move(i, j);
                     double nextValue = minimize(nextState, maxValue, depth-1);
-                    if(nextValue > beta) {
+                    if(nextValue >= beta) {
                         return nextValue;
                     }
 
@@ -55,7 +55,7 @@ public class MinimaxBot extends Bot{
                 try {
                     State nextState = state.move(i, j);
                     double nextValue = maximize(nextState, minValue, depth-1);
-                    if(nextValue < alpha) {
+                    if(nextValue <= alpha) {
                         return nextValue;
                     }
 
