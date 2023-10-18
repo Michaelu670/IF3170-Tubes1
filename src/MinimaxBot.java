@@ -19,8 +19,32 @@ public class MinimaxBot extends Bot{
         for (int i = 0;i < State.BOARD_SIZE;i++) {
             for (int j = 0;j < State.BOARD_SIZE;j++) {
                 try {
-                    State nextState = state.move(i, j);
-                    double nextValue = minimize(nextState, maxValue, depth-1);
+                    if (state.getValue(i, j) == State.BLANK_MARKER) {
+                        continue;
+                    }
+                    int[] dx = {1, -1, 0, 0, 0};
+                    int[] dy = {0, 0, 1, -1, 0};
+                    char[] save = {'u', 'u', 'u', 'u'};
+                    for (int k = 0; k < 4; k++) {
+                        int nx = i + dx[k];
+                        int ny = j + dy[k];
+                        if (nx < 0 || ny < 0 || nx >= State.BOARD_SIZE || ny >= State.BOARD_SIZE) {
+                            continue;
+                        }
+                        save[k] = state.getValue(nx, ny);
+                        state.setValue(nx, ny, player_marker);
+                        state.moveParams();
+                    }
+                    double nextValue = minimize(state, maxValue, depth-1);
+                    for (int k = 0; k < 4; k++) {
+                        int nx = i + dx[k];
+                        int ny = j + dy[k];
+                        if (nx < 0 || ny < 0 || nx >= State.BOARD_SIZE || ny >= State.BOARD_SIZE) {
+                            continue;
+                        }
+                        state.setValue(nx, ny, save[k]);
+                        state.undoParams();
+                    }
                     if(nextValue >= beta) {
                         return nextValue;
                     }
@@ -53,8 +77,32 @@ public class MinimaxBot extends Bot{
         for (int i = 0;i < State.BOARD_SIZE;i++) {
             for (int j = 0;j < State.BOARD_SIZE;j++) {
                 try {
-                    State nextState = state.move(i, j);
-                    double nextValue = maximize(nextState, minValue, depth-1);
+                    if (state.getValue(i, j) == State.BLANK_MARKER) {
+                        continue;
+                    }
+                    int[] dx = {1, -1, 0, 0, 0};
+                    int[] dy = {0, 0, 1, -1, 0};
+                    char[] save = {'u', 'u', 'u', 'u'};
+                    for (int k = 0; k < 4; k++) {
+                        int nx = i + dx[k];
+                        int ny = j + dy[k];
+                        if (nx < 0 || ny < 0 || nx >= State.BOARD_SIZE || ny >= State.BOARD_SIZE) {
+                            continue;
+                        }
+                        save[k] = state.getValue(nx, ny);
+                        state.setValue(nx, ny, player_marker);
+                        state.moveParams();
+                    }
+                    double nextValue = maximize(state, minValue, depth-1);
+                    for (int k = 0; k < 4; k++) {
+                        int nx = i + dx[k];
+                        int ny = j + dy[k];
+                        if (nx < 0 || ny < 0 || nx >= State.BOARD_SIZE || ny >= State.BOARD_SIZE) {
+                            continue;
+                        }
+                        state.setValue(nx, ny, save[k]);
+                        state.undoParams();
+                    }
                     if(nextValue <= alpha) {
                         return nextValue;
                     }

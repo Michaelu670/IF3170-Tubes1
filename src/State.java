@@ -156,6 +156,15 @@ public class State {
         }
     }
 
+    public void moveParams() {
+        turnsLeft -= 1;
+        playerXTurn = !playerXTurn;
+    }
+    public void undoParams() {
+        turnsLeft += 1;
+        playerXTurn = !playerXTurn;
+    }
+
 
     /**
      * simulate real game move on current state
