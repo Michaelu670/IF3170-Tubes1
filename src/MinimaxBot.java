@@ -75,7 +75,6 @@ public class MinimaxBot extends Bot{
 
     @Override
     protected int[] search() throws Exception {
-        double maxValue = -MAX_OBJ_VAL;
 
         int[] nextMove = new int[2];
         int emptyTiles = state.emptyCount();
@@ -90,6 +89,7 @@ public class MinimaxBot extends Bot{
 
         System.out.println("Max depth : " + maxDepth);
 
+        double maxValue = -MAX_OBJ_VAL;
         for (int i = 0;i < State.BOARD_SIZE;i++) {
             for (int j = 0;j < State.BOARD_SIZE;j++) {
                 try {
