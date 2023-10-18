@@ -1,10 +1,10 @@
 public class BotFight {
     public static void main(String[] args) {
         int turns = 28;
-        boolean showMoves = true;
+        boolean showMoves = true;       // USE THIS TO CHANGE WHETHER MOVES IS PRINTED OR NOT
 
         // choose whether bot 1 goes first or not
-        boolean bot1Move = true;
+        boolean bot1Move = true;        // USE THIS TO CHANGE WHICH BOT GOES FIRST
 
         char bot1Marker = bot1Move ? State.X_MARKER : State.O_MARKER;
         char bot2Marker = bot1Move ? State.O_MARKER : State.X_MARKER;

@@ -87,7 +87,7 @@ public class MinimaxBot extends Bot{
             maxDepth++;
         }
 
-        System.out.println("Max depth : " + maxDepth);
+//        System.out.println("Max depth : " + maxDepth);
 
         double maxValue = -MAX_OBJ_VAL;
         for (int i = 0;i < State.BOARD_SIZE;i++) {
