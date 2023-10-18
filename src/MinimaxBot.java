@@ -1,5 +1,5 @@
 public class MinimaxBot extends Bot{
-    protected static final double MAX_DEPTH_CONSTRAINT = 1e5;
+    protected static final double MAX_DEPTH_CONSTRAINT = 1e6;
 
     public MinimaxBot(char player_marker) {
        super(player_marker);
@@ -19,32 +19,35 @@ public class MinimaxBot extends Bot{
         for (int i = 0;i < State.BOARD_SIZE;i++) {
             for (int j = 0;j < State.BOARD_SIZE;j++) {
                 try {
-                    if (state.getValue(i, j) == State.BLANK_MARKER) {
+                    if (state.getValue(i, j) != State.BLANK_MARKER) {
                         continue;
                     }
                     int[] dx = {1, -1, 0, 0, 0};
                     int[] dy = {0, 0, 1, -1, 0};
-                    char[] save = {'u', 'u', 'u', 'u'};
-                    for (int k = 0; k < 4; k++) {
+                    char[] save = {'u', 'u', 'u', 'u', 'u'};
+                    char turn = state.getPlayerXTurn() ? State.X_MARKER : State.O_MARKER;
+                    for (int k = 0; k < 5; k++) {
                         int nx = i + dx[k];
                         int ny = j + dy[k];
                         if (nx < 0 || ny < 0 || nx >= State.BOARD_SIZE || ny >= State.BOARD_SIZE) {
                             continue;
                         }
                         save[k] = state.getValue(nx, ny);
-                        state.setValue(nx, ny, player_marker);
-                        state.moveParams();
+                        if (k == 4 || save[k] != State.BLANK_MARKER) {
+                            state.setValue(nx, ny, turn);
+                        }
                     }
+                    state.moveParams();
                     double nextValue = minimize(state, maxValue, depth-1);
-                    for (int k = 0; k < 4; k++) {
+                    for (int k = 0; k < 5; k++) {
                         int nx = i + dx[k];
                         int ny = j + dy[k];
                         if (nx < 0 || ny < 0 || nx >= State.BOARD_SIZE || ny >= State.BOARD_SIZE) {
                             continue;
                         }
                         state.setValue(nx, ny, save[k]);
-                        state.undoParams();
                     }
+                    state.undoParams();
                     if(nextValue >= beta) {
                         return nextValue;
                     }
@@ -55,6 +58,7 @@ public class MinimaxBot extends Bot{
                 } catch (InterruptedException e) {
                     throw e;
                 } catch (Exception e) {
+                    e.printStackTrace();
                     continue;
                 }
             }
@@ -77,32 +81,35 @@ public class MinimaxBot extends Bot{
         for (int i = 0;i < State.BOARD_SIZE;i++) {
             for (int j = 0;j < State.BOARD_SIZE;j++) {
                 try {
-                    if (state.getValue(i, j) == State.BLANK_MARKER) {
+                    if (state.getValue(i, j) != State.BLANK_MARKER) {
                         continue;
                     }
                     int[] dx = {1, -1, 0, 0, 0};
                     int[] dy = {0, 0, 1, -1, 0};
-                    char[] save = {'u', 'u', 'u', 'u'};
-                    for (int k = 0; k < 4; k++) {
+                    char[] save = {'u', 'u', 'u', 'u', 'u'};
+                    char turn = state.getPlayerXTurn() ? State.X_MARKER : State.O_MARKER;
+                    for (int k = 0; k < 5; k++) {
                         int nx = i + dx[k];
                         int ny = j + dy[k];
                         if (nx < 0 || ny < 0 || nx >= State.BOARD_SIZE || ny >= State.BOARD_SIZE) {
                             continue;
                         }
                         save[k] = state.getValue(nx, ny);
-                        state.setValue(nx, ny, player_marker);
-                        state.moveParams();
+                        if (k == 4 || save[k] != State.BLANK_MARKER) {
+                            state.setValue(nx, ny, turn);
+                        }
                     }
+                    state.moveParams();
                     double nextValue = maximize(state, minValue, depth-1);
-                    for (int k = 0; k < 4; k++) {
+                    for (int k = 0; k < 5; k++) {
                         int nx = i + dx[k];
                         int ny = j + dy[k];
                         if (nx < 0 || ny < 0 || nx >= State.BOARD_SIZE || ny >= State.BOARD_SIZE) {
                             continue;
                         }
                         state.setValue(nx, ny, save[k]);
-                        state.undoParams();
                     }
+                    state.undoParams();
                     if(nextValue <= alpha) {
                         return nextValue;
                     }
@@ -113,6 +120,7 @@ public class MinimaxBot extends Bot{
                 } catch (InterruptedException e) {
                     throw e;
                 } catch (Exception e) {
+                    e.printStackTrace();
                     continue;
                 }
             }
