@@ -9,13 +9,15 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ChromosomeBuilder {
     int turnsLeft;
     State state;
+    String player_marker;
     public ChromosomeBuilder() {
 
     }
 
-    public ChromosomeBuilder(int turnsLeft, State state) {
+    public ChromosomeBuilder(int turnsLeft, State state, String player_marker) {
         this.turnsLeft = turnsLeft;
         this.state = state;
+        this.player_marker = player_marker;
     }
 
     public void setTurnsLeft(int turnsLeft) {
@@ -45,19 +47,19 @@ public class ChromosomeBuilder {
         for (int i = 0; i < turnsLeft; i++) {
             genome.add(empty.get(i));
         }
-        return new Chromosome(state, genome);
+        return new Chromosome(state, genome, player_marker);
     }
 
     public Chromosome buildGood() {
         ArrayList<Pair<Double, Integer>> emptyAndVal = new ArrayList<>();
         ArrayList<Integer> empty = new ArrayList<>();
-        double curValue = state.objectiveFunctionHeuristic();
+        double curValue = state.objectiveFunctionHeuristic(player_marker);
 
         // get all empty positions
         for (int i = 0; i < State.BOARD_SIZE; i++) {
             for (int j = 0; j < State.BOARD_SIZE; j++) {
                 if (state.getValue(i, j).isBlank()) {
-                    double nxtValue = state.move(i, j).objectiveFunctionHeuristic();
+                    double nxtValue = state.move(i, j).objectiveFunctionHeuristic(player_marker);
                     emptyAndVal.add(new Pair<>(nxtValue-curValue,i * State.BOARD_SIZE + j));
                     empty.add(i * State.BOARD_SIZE + j);
                 }
@@ -79,7 +81,7 @@ public class ChromosomeBuilder {
         for (int i = 0; i < turnsLeft - 1; i++) {
             genome.add(empty.get(i));
         }
-        return new Chromosome(state, genome);
+        return new Chromosome(state, genome, player_marker);
     }
 
 

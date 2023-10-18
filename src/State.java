@@ -60,11 +60,16 @@ public class State {
      * @return final state value
      * @throws NoSuchMethodError if this is not terminal state
      */
-    public double objectiveFunction() throws NoSuchMethodError {
+    public double objectiveFunction(String player_marker) throws NoSuchMethodError {
         if (turnsLeft > 0) throw new NoSuchMethodError();
         int xCount = (int) Arrays.stream(values).flatMap(Arrays::stream).filter((x) -> x.equals("X")).count();
         int oCount = (int) Arrays.stream(values).flatMap(Arrays::stream).filter((x) -> x.equals("O")).count();
-        return oCount - xCount;
+        if (player_marker.equals(X_MARKER)) {
+            return xCount - oCount;
+        }
+        else {
+            return oCount - xCount;
+        }
     }
 
     /**

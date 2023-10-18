@@ -1,5 +1,5 @@
 public class MinimaxBot extends Bot{
-    protected static final double MAX_DEPTH_CONSTRAINT = 1e18;
+    protected static final double MAX_DEPTH_CONSTRAINT = 1e4;
 
     public MinimaxBot(String player_marker) {
        super(player_marker);
@@ -10,7 +10,7 @@ public class MinimaxBot extends Bot{
             return state.objectiveFunctionHeuristic(this.player_marker);
         }
         if(state.getTurnsLeft() <= 0) {
-            return state.objectiveFunction();
+            return state.objectiveFunction(this.player_marker);
         }
         if (Thread.interrupted()) {
             throw new InterruptedException();
@@ -44,7 +44,7 @@ public class MinimaxBot extends Bot{
             return state.objectiveFunctionHeuristic(this.player_marker);
         }
         if(state.getTurnsLeft() <= 0) {
-            return state.objectiveFunction();
+            return state.objectiveFunction(this.player_marker);
         }
         if (Thread.interrupted()) {
             throw new InterruptedException();

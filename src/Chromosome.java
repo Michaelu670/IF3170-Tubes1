@@ -10,10 +10,12 @@ import java.util.*;
 public class Chromosome {
     private State initialState;
     private ArrayList<Integer> genome;
+    String player_marker;
 
-    public Chromosome(State initialState, ArrayList<Integer> genome) {
+    public Chromosome(State initialState, ArrayList<Integer> genome, String player_marker) {
         this.initialState = initialState;
         this.genome = genome;
+        this.player_marker = player_marker;
     }
 
     /**
@@ -50,7 +52,7 @@ public class Chromosome {
      * @return double - objective value
      */
     public double objectiveFunction() {
-        return toState().objectiveFunctionHeuristic();
+        return toState().objectiveFunctionHeuristic(player_marker);
     }
 
     public State toState() {
@@ -167,7 +169,7 @@ public class Chromosome {
 
     @Override
     protected Chromosome clone() throws CloneNotSupportedException {
-        Chromosome clone = new Chromosome(initialState, (ArrayList<Integer>) genome.clone());
+        Chromosome clone = new Chromosome(initialState, (ArrayList<Integer>) genome.clone(), player_marker);
         return clone;
     }
 }

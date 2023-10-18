@@ -24,7 +24,7 @@ public class GeneticAlgorithmBot extends Bot {
         // Generate initial population
         ArrayList<Chromosome> genePool = new ArrayList<>();
         // Build chromosome with length at most 4
-        ChromosomeBuilder builder = new ChromosomeBuilder(Math.min(state.getTurnsLeft(), 4), state);
+        ChromosomeBuilder builder = new ChromosomeBuilder(Math.min(state.getTurnsLeft(), 4), state, player_marker);
 
         // add sorted gene
         for (int i = 0; i < POOL_SIZE; i++) {
